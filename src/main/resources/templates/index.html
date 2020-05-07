@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../static/css/index.css">
+    <!-- 引入组件库 -->
+<!--    <script src="../static/js/axios.js"></script>-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="../static/js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <ul >
+            <li v-for="item in datas" >
+                <p>{{item.name}}</p>
+                <p v-html="item.pass"></p>
+                <img v-bind:src=item.src>
+            </li>
+        </ul>
+    </div>
+
+<script>
+    var req = axios.create({
+        baseURL: 'http://localhost:8080/',
+        timeout: 1000,
+        headers: {'X-Custom-Header': 'foobar'}
+    });
+    var app = new Vue({
+        el: '#app',
+        data: {
+            datas:[]
+        },
+        methods: {
+            addNewTodo: function () {
+                this.todos.push({
+                    id: this.nextTodoId++,
+                    title: this.newTodoText
+                })
+                this.newTodoText = ''
+            },
+            dataList(){
+                req.get("/dataList")
+                    .then(res=>{
+                        console.log(res)
+                        this.datas = res.data;
+                    })
+
+            }
+        },created: function () {
+            this.dataList();
+        }
+    })
+</script>
+</body>
+</html>
